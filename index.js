@@ -32,6 +32,17 @@ app.get("/", async (req, res) => {
 const userRoutes = require("./routes/user");
 app.use(userRoutes);
 
+app.get("/name", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${process.env.GP_URI}/games?key=${process.env.GP_APIKEY}&search_excat=true&search=${req.query.name}`
+    );
+    res.status(200).json(response.data);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 /*
 app.get("/signup", isAuthentificated, async (req, res) => {
   try {

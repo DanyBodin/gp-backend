@@ -3,6 +3,7 @@ const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
 const uid2 = require("uid2");
 const User = require("../models/User.js");
+const Review = require("../models/Reviews.js");
 
 const router = express.Router();
 
@@ -66,6 +67,28 @@ router.post("/user/login", async (req, res) => {
       } else {
         res.status(401).json({ error: "Unauthorized" });
       }
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.post("/user/review", async (req, res) => {
+  try {
+    if (req.fields.review_text) {
+      if (req.fields.review_title) {
+        const newReview = new Review({
+          review_title: req.fields.review_title,
+          review_text: req.fields.review_text,
+        });
+
+        await newReview.save();
+        res.json("Thank you for reviewing!");
+      } else {
+        res.json({ message: "Missing review title" });
+      }
+    } else {
+      res.json({ message: "Missing review content" });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
