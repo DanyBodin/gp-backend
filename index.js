@@ -22,7 +22,6 @@ app.get("/", async (req, res) => {
     const response = await axios.get(
       `${process.env.GP_URI}/games?key=${process.env.GP_APIKEY}`
     );
-    console.log(response.data);
     res.status(200).json(response.data);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -32,12 +31,29 @@ app.get("/", async (req, res) => {
 const userRoutes = require("./routes/user");
 app.use(userRoutes);
 
-app.get("/name", async (req, res) => {
+//GAMES
+app.get("/games", async (req, res) => {
   try {
     const response = await axios.get(
-      `${process.env.GP_URI}/games?key=${process.env.GP_APIKEY}&search_excat=true&search=${req.query.name}`
+      `${process.env.GP_URI}/games?key=${
+        process.env.GP_APIKEY
+      }&search_excat=${true}&search=${req.query.name}&search_precise=${true}`
     );
-    res.status(200).json(response.data);
+    res.status(200).json(response.data.results[0]);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+//GENRES
+app.get("/genres", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `${process.env.GP_URI}/games?key=${
+        process.env.GP_APIKEY
+      }&search_excat=${true}&search=${req.query.name}&search_precise=${true}`
+    );
+    res.status(200).json(response.data.results);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
