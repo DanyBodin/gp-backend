@@ -4,8 +4,32 @@ const encBase64 = require("crypto-js/enc-base64");
 const uid2 = require("uid2");
 const User = require("../models/User.js");
 const Review = require("../models/Reviews.js");
+const Collection = require("../models/Collection.js");
 
 const router = express.Router();
+
+router.post("/user/addcollection", async (req, res) => {
+  try {
+    const isGameExist = await Collection.findOne({
+      game_id: req.fields.game_id,
+    });
+
+    if (isGameExist !== null) {
+      res.status(400).json({ message: "Game is already in collection" });
+    } else {
+      const newCollection = new Collection({
+        game_name: req.fields.game_name,
+        game_id: req.fields.game_id,
+        background_image: req.fields.background_image,
+      });
+
+      await newCollection.save();
+      res.json({ message: "Game saved in your collection" });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 router.post("/user/signup", async (req, res) => {
   try {
@@ -80,6 +104,7 @@ router.post("/user/review", async (req, res) => {
         const newReview = new Review({
           review_title: req.fields.review_title,
           review_text: req.fields.review_text,
+          game_id: req.fields.game_id,
         });
 
         await newReview.save();

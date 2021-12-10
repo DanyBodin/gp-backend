@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 
 const Review = mongoose.model("Review", {
-  review_title: {
+  review_title: String,
+  review_text: String,
+  game_id: {
     unique: true,
-    type: String,
-  },
-  review_text: {
-    unique: true,
-    type: String,
+    type: Number,
   },
   token: String,
   hash: String,

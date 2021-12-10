@@ -5,10 +5,11 @@ const Collection = mongoose.model("Collection", {
     unique: true,
     type: String,
   },
-  review_text: {
+  game_id: {
     unique: true,
-    type: String,
+    type: Number,
   },
+  background_image: Object,
   token: String,
   hash: String,
   salt: String,
